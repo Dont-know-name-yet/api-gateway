@@ -1,4 +1,4 @@
-package nonamebackend.noname;
+package noname;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,5 +9,4 @@ public class NonameApplication {
     public static void main(String[] args) {
         SpringApplication.run(NonameApplication.class, args);
     }
-
 }
