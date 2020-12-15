@@ -7,7 +7,7 @@ plugins {
     id 'com.palantir.docker-run' version '0.25.0'
 }
 
-group = 'noname-backend'
+group = 'api-gateway-zuul'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '8'
 
