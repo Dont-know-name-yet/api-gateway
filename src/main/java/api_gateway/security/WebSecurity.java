@@ -1,4 +1,4 @@
-package api_gateway_zuul.security;
+package api_gateway.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;

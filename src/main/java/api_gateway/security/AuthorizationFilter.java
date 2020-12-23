@@ -1,4 +1,4 @@
-package api_gateway_zuul.security;
+package api_gateway.security;
 
 
 import io.jsonwebtoken.Jwts;
