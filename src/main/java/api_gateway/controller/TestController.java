@@ -1,4 +1,4 @@
-package api_gateway_zuul.controller;
+package api_gateway.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
