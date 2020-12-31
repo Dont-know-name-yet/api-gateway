@@ -5,37 +5,30 @@ pipeline {
         pollSCM '* * * * *'
     }
     stages {
-        stage('Build') {
+        stage('Pull') {
             steps {
-                sh './gradlew assemble'
+                sh 'ssh -o StrictHostKeyChecking=no root@135.181.97.45 "cd /home/api-gateway && git pull"'
             }
         }
-        stage('Build Docker image') {
+        stage('Build App') {
             steps {
-                sh './gradlew docker'
+                sh 'ssh -o StrictHostKeyChecking=no root@135.181.97.45 "cd /home/api-gateway && ./gradlew assemble"'
             }
         }
-        stage('Push Docker image') {
-            environment {
-                DOCKER_HUB_LOGIN = credentials('docker-hub')
-            }
+        stage('Build Image') {
             steps {
-                sh 'docker login --username=$DOCKER_HUB_LOGIN_USR --password=$DOCKER_HUB_LOGIN_PSW'
-                sh './gradlew dockerPush'
+                sh 'ssh -o StrictHostKeyChecking=no root@135.181.97.45 "cd /home/api-gateway && docker build -f Dockerfile --tag=api-gateway --force-rm=true ."'
             }
         }
-        stage('Deploy on Dev Server') {
-            environment {
-                deletePreviousImages = 'docker rmi -f $(docker images -a -q)'
-                deletePreviousContainers = 'docker rm -vf $(docker ps -a -q)'
-                dockerRun = 'docker run -p 8080:8080 -d --name my-app tomislav10/myproject-spring-boot:1.0-SNAPSHOT'
-            }
+        stage('Clean old container') {
             steps {
-                sshagent(['backend-server']) {
-                    sh 'ssh -o StrictHostKeyChecking=no root@167.99.145.37 "${deletePreviousContainers} && ${deletePreviousImages} && ${dockerRun}"'
-                }
+                sh 'ssh -o StrictHostKeyChecking=no root@135.181.97.45 "docker stop api-gateway && docker rm -vf api-gateway"'
             }
         }
-
+        stage('Run') {
+            steps {
+                sh 'ssh -o StrictHostKeyChecking=no root@135.181.97.45 "cd /home/api-gateway && docker run -d --name api-gateway -p 8011:8011 -e "spring.rabbitmq.host=135.181.97.45" api-gateway:latest"'
+            }
+        }
     }
 }

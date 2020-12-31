@@ -1,4 +1,4 @@
-FROM openjdk:8
-ARG JAR_FILE
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+FROM openjdk:8-jdk-alpine
+VOLUME /tmp
+COPY build/libs/api-gateway-0.0.1-SNAPSHOT.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
